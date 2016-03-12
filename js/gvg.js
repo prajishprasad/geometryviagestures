@@ -1,6 +1,7 @@
 
 var final_degree=1;
-var index=160;
+var task2_index=160;
+var task3_index=0.05;
 var viewer;
 var canvas;
 var body;
@@ -11,6 +12,13 @@ var viewerSettings = {
 };
 
 initialiseCanvas=function(id,task){
+	if(task=="task3"){
+		viewerSettings = {
+			cameraEyePosition : [-2.0, -1.5, 0.3],
+			cameraCenterPosition : [0.0, 0.0, 0.6],
+			cameraUpVector : [0.0, 0.0, 1.0]
+		};	
+	}
 	viewer = new JSM.ThreeViewer ();
 	canvas = document.getElementById (id);
 	canvas.width = document.body.clientWidth;
@@ -66,12 +74,22 @@ slice=function(){
 
 smash=function(){
 	removeMeshes();
-	var pie1 = JSM.GeneratePie(0.5,1,index* JSM.DegRad,500,true,true);
-	var pie2 = JSM.GeneratePie(0.5,1,index* JSM.DegRad,500,true,true);
+	var pie1 = JSM.GeneratePie(0.5,1,task2_index* JSM.DegRad,500,true,true);
+	var pie2 = JSM.GeneratePie(0.5,1,task2_index* JSM.DegRad,500,true,true);
 	var transformation = new JSM.Transformation ();
 	transformation = JSM.RotationZTransformation (180* JSM.DegRad,new JSM.Coord (0,0,0));
 	pie1.Transform (transformation);
 	AddBodyToViewer(pie1);
 	AddBodyToViewer(pie2);
-	index-=40;
+	task2_index-=40;
+}
+
+stack=function(){
+	var cylinderBody = JSM.GenerateCylinder (0.5, 0.04,100,true, false);
+	var addition = JSM.TranslationTransformation (new JSM.Coord (0.0, 0.0, task3_index));
+	var transformation = new JSM.Transformation ();
+	transformation.Append (addition);
+	cylinderBody.Transform (transformation);
+	AddBodyToViewer(cylinderBody);
+	task3_index+=0.05;
 }
